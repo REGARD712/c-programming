@@ -185,7 +185,7 @@ void Consume()
 			{
 				printf("您的饭卡余额是：%.2lf\n", stu.credit);
 				printf("请输入消费的金额：");
-				while (scanf("%lf", &money) != 1)
+				while (scanf("%lf", &money) != 1 || stu.credit < 0)
 				{
 					printf("输入无效，请重新输入：");
 					clear_stdin();  // 清空缓冲区
@@ -194,7 +194,7 @@ void Consume()
 
 				if (money > stu.credit)
 				{
-					printf("余额不足，无法完成消费！\n");
+					printf("余额不够，无法完成消费！\n");
 				}
 				else
 				{
@@ -279,7 +279,7 @@ void Charge()
 			while (scanf("%lf", &charge_amount) != 1 || charge_amount <= 0)
 			{
 				printf("输入无效，请输入一个大于0的整数：");
-				clear_stdin();  // 清空输入缓冲区
+				clear_stdin();  // 清空缓冲区
 			}
 			clear_stdin();  // 清空缓冲区
 
@@ -322,20 +322,41 @@ void Add()
 
 	while (1)
 	{
-		// 清空屏幕并显示提示信息
 		system("cls");
 		printf("若返回，请输入‘#’；\n若不返回，请输入新饭卡号：");
+
 		scanf("%s", stu.id);
 		clear_stdin();  // 清空缓冲区
 
-		// 检查是否输入了返回标志
+		// 检查是否返回
 		if (strcmp(stu.id, "#") == 0)
 		{
 			break;
 		}
 
+		// 检查饭卡号有效性（只允许数字和字母）
+		int valid = 1;
+		int len = strlen(stu.id);
+		if (len == 0 || len >= 20) valid = 0;
+		int i = 0;
+		for (i = 0; i < len; ++i)
+		{
+			if (!((stu.id[i] >= '0' && stu.id[i] <= '9') ||
+				(stu.id[i] >= 'A' && stu.id[i] <= 'Z') ||
+				(stu.id[i] >= 'a' && stu.id[i] <= 'z')))
+			{
+				valid = 0;
+				break;
+			}
+		}
+		if (!valid)
+		{
+			printf("饭卡号格式错误，已退出添加。\n");
+			break;
+		}
+
 		// 检查饭卡号是否重复
-		FILE* check_pf = fopen("card.dat", "r");  // 只读模式打开文件用于检查
+		FILE* check_pf = fopen("card.dat", "r");
 		if (check_pf == NULL)
 		{
 			perror("无法打开文件！\n");
@@ -355,7 +376,7 @@ void Add()
 		// 输入新饭卡的其他信息
 		printf("请输入姓名：");
 		scanf("%s", stu.name);
-		clear_stdin();  // 清空缓冲区
+		clear_stdin();
 
 		printf("请输入初始金额：");
 		while (scanf("%lf", &stu.credit) != 1 || stu.credit < 0)
@@ -363,26 +384,27 @@ void Add()
 			printf("输入无效，请输入一个非负金额：");
 			clear_stdin();  // 清空缓冲区
 		}
-		clear_stdin();  // 清空缓冲区
+		clear_stdin();
 
 		printf("请输入是否挂失（y/n）：");
 		char check_input;
 		while (scanf("%c", &check_input) != 1 || (check_input != 'y' && check_input != 'n'))
 		{
 			printf("输入无效，请输入y或n：");
-			clear_stdin();  // 清空缓冲区
+			clear_stdin();
 		}
-		clear_stdin();  // 清空缓冲区
+		clear_stdin();
 		stu.check = (check_input == 'y') ? y : n;
 
-		// 将新饭卡信息写入文件
+		// 写入文件
 		fprintf(pf, "%s %s %.2lf %d\n", stu.id, stu.name, stu.credit, stu.check);
-		fflush(pf);  // 刷新文件缓冲区，确保数据写入磁盘
+		fflush(pf);  // 刷新缓冲区，将数据写入文件
 		printf("新饭卡添加成功！\n");
 		system("pause");
 	}
 
-	fclose(pf);  // 关闭文件
+	fclose(pf);
+	pf = NULL;
 }
 
 void Delete()
@@ -409,7 +431,6 @@ void Delete()
 	char id_input[20] = { 0 };  // 用于存放输入的饭卡号
 	bool found = n;             // 标记是否找到目标饭卡
 
-	// 清空屏幕并显示提示信息
 	system("cls");
 	printf("若返回，请输入‘#’；\n若不返回，请输入要注销的饭卡号：");
 	scanf("%s", id_input);
@@ -607,7 +628,7 @@ void Information()
 			int lost_cards = 0;
 			double total_balance = 0.0;
 
-			printf("\n文件中所有饭卡号、余额及挂失状态如下：\n");
+			printf("\n文件中所有饭卡号、姓名、余额及挂失状态如下：\n");
 
 			while (fscanf(pf, "%s %s %lf %d", stu.id, stu.name, &stu.credit, &stu.check) != EOF)
 			{
@@ -618,9 +639,10 @@ void Information()
 					lost_cards++;
 				}
 
-				// 输出当前饭卡号、余额及挂失状态
-				printf("饭卡号：%s，余额：%.2lf，挂失状态：%s\n",
+				// 输出当前饭卡号、姓名、余额及挂失状态
+				printf("饭卡号：%s，姓名：%s, 余额：%.2lf，挂失状态：%s\n",
 					stu.id,
+					stu.name,
 					stu.credit,
 					stu.check ? "挂失" : "未挂失");
 			}
@@ -650,6 +672,7 @@ int main()
 		menu();
 		printf("请选择：");
 		scanf("%d", &input);
+		clear_stdin();  // 清空缓冲区
 		switch (input) 
 		{
 		case 1:
