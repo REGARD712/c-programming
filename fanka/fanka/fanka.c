@@ -16,30 +16,33 @@ struct card
 	bool check;
 };
 
-// 清空输入缓冲区函数
+// 清空缓冲区函数
 void clear_stdin()
 {
 	int c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
-// 每次使用scanf函数输入数据之后调用该函数，清空输入缓冲区
-// 以防止输入错误数据导致死循环
+// 每次使用scanf函数输入数据之后调用该函数，清空缓冲区
+// 以防止残余数据导致死循环
 
 // 判断饭卡号是否重复函数
-int Duplicate(FILE* pf, const char* id) 
+int Duplicate(FILE* pf, const char* id)
 {
-	char d[20] = { 0 };  // 用于存放读取的饭卡号
-	rewind(pf);  // 使文件指针指向文件开头
-	while (fscanf(pf, "%s", d) != EOF) 
+	char line[128]; // 假设每行不会超过128字节
+	char card_id[20];
+	rewind(pf); // 文件指针回到开头
+	while (fgets(line, sizeof(line), pf) != NULL)
 	{
-		if (strcmp(d, id) == 0) 
+		// 将获取到的字符串转换成格式化数据，只保留饭卡号数据
+		if (sscanf(line, "%19s", card_id) == 1)
 		{
-			return 1;  // 饭卡号重复
+			if (strcmp(card_id, id) == 0)
+			{
+				return 1; // 重复
+			}
 		}
-		// 跳过姓名、金额、是否挂失
-		fscanf(pf, "%*s,%*f,%*d");
 	}
-	return 0;  // 饭卡号不重复
+	return 0; // 不重复
 }
 
 void menu() 
@@ -77,7 +80,7 @@ void Establish()
 
 		printf("若返回，请输入‘#’；\n若不返回，请输入饭卡号："); 
 		scanf("%s", stu.id);
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 		if (strcmp(stu.id, "#") == 0) 
 		{ // 输入#返回菜单界面
 			break;
@@ -92,7 +95,7 @@ void Establish()
 		fprintf(pf, "%s ", stu.id);// 将饭卡号写入文件
 
 		printf("请输入姓名："); scanf("%s", stu.name);
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 		fprintf(pf, "%s ", stu.name);// 将姓名写入文件
 
 		printf("请输入金额："); 
@@ -153,7 +156,7 @@ void Consume()
 	system("cls");
 	printf("若返回，请输入‘#’；\n若不返回，请输入饭卡号：");
 	scanf("%s", id_input);
-	clear_stdin();  // 清空输入缓冲区
+	clear_stdin();  // 清空缓冲区
 	if (strcmp(id_input, "#") == 0)
 	{
 		fclose(pf);
@@ -185,9 +188,9 @@ void Consume()
 				while (scanf("%lf", &money) != 1)
 				{
 					printf("输入无效，请重新输入：");
-					clear_stdin();  // 清空输入缓冲区
+					clear_stdin();  // 清空缓冲区
 				}
-				clear_stdin();  // 清空输入缓冲区
+				clear_stdin();  // 清空缓冲区
 
 				if (money > stu.credit)
 				{
@@ -248,7 +251,7 @@ void Charge()
 	system("cls");
 	printf("若返回，请输入‘#’；\n若不返回，请输入饭卡号：");
 	scanf("%s", id_input);
-	clear_stdin();  // 清空输入缓冲区
+	clear_stdin();  // 清空缓冲区
 	if (strcmp(id_input, "#") == 0)
 	{
 		fclose(pf);
@@ -278,7 +281,7 @@ void Charge()
 				printf("输入无效，请输入一个大于0的整数：");
 				clear_stdin();  // 清空输入缓冲区
 			}
-			clear_stdin();  // 清空输入缓冲区
+			clear_stdin();  // 清空缓冲区
 
 			double old_credit = stu.credit;  // 保存续钱前的余额
 			stu.credit += charge_amount;    // 更新余额
@@ -323,7 +326,7 @@ void Add()
 		system("cls");
 		printf("若返回，请输入‘#’；\n若不返回，请输入新饭卡号：");
 		scanf("%s", stu.id);
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 
 		// 检查是否输入了返回标志
 		if (strcmp(stu.id, "#") == 0)
@@ -352,24 +355,24 @@ void Add()
 		// 输入新饭卡的其他信息
 		printf("请输入姓名：");
 		scanf("%s", stu.name);
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 
 		printf("请输入初始金额：");
 		while (scanf("%lf", &stu.credit) != 1 || stu.credit < 0)
 		{
 			printf("输入无效，请输入一个非负金额：");
-			clear_stdin();  // 清空输入缓冲区
+			clear_stdin();  // 清空缓冲区
 		}
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 
 		printf("请输入是否挂失（y/n）：");
 		char check_input;
 		while (scanf("%c", &check_input) != 1 || (check_input != 'y' && check_input != 'n'))
 		{
 			printf("输入无效，请输入y或n：");
-			clear_stdin();  // 清空输入缓冲区
+			clear_stdin();  // 清空缓冲区
 		}
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 		stu.check = (check_input == 'y') ? y : n;
 
 		// 将新饭卡信息写入文件
@@ -410,7 +413,7 @@ void Delete()
 	system("cls");
 	printf("若返回，请输入‘#’；\n若不返回，请输入要注销的饭卡号：");
 	scanf("%s", id_input);
-	clear_stdin();  // 清空输入缓冲区
+	clear_stdin();  // 清空缓冲区
 	if (strcmp(id_input, "#") == 0)
 	{
 		fclose(pf);
@@ -476,7 +479,7 @@ void Set()
 	system("cls");
 	printf("若返回，请输入‘#’；\n若不返回，请输入饭卡号：");
 	scanf("%s", id_input);
-	clear_stdin();  // 清空输入缓冲区
+	clear_stdin();  // 清空缓冲区
 	if (strcmp(id_input, "#") == 0)
 	{
 		fclose(pf);
@@ -498,9 +501,9 @@ void Set()
 			while (scanf("%c", &loss_status) != 1 || (loss_status != 'y' && loss_status != 'n'))
 			{
 				printf("输入无效，请输入y或n：");
-				clear_stdin();  // 清空输入缓冲区
+				clear_stdin();  // 清空缓冲区
 			}
-			clear_stdin();  // 清空输入缓冲区
+			clear_stdin();  // 清空缓冲区
 
 			stu.check = (loss_status == 'y') ? y : n;  // 更新挂失状态
 			printf("挂失状态更新成功！\n");
@@ -543,7 +546,7 @@ void Information()
 		printf("\t......................................\n");
 		printf("请选择：");
 		scanf("%d", &choice);
-		clear_stdin();  // 清空输入缓冲区
+		clear_stdin();  // 清空缓冲区
 
 		if (choice == 0)
 		{
@@ -566,7 +569,7 @@ void Information()
 
 			printf("请输入要查询的饭卡号：");
 			scanf("%s", id_input);
-			clear_stdin();  // 清空输入缓冲区
+			clear_stdin();  // 清空缓冲区
 
 			while (fscanf(pf, "%s %s %lf %d", stu.id, stu.name, &stu.credit, &stu.check) != EOF)
 			{
