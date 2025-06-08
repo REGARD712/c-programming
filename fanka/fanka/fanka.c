@@ -78,13 +78,35 @@ void Establish()
 	{	// ¶à´ÎÊäÈë·¹¿¨ĞÅÏ¢
 		system("cls");
 
-		printf("Èô·µ»Ø£¬ÇëÊäÈë¡®#¡¯£»\nÈô²»·µ»Ø£¬ÇëÊäÈë·¹¿¨ºÅ£º"); 
+		printf("Èô·µ»Ø£¬ÇëÊäÈë¡®#¡¯£»\nÈô²»·µ»Ø£¬ÇëÊäÈë·¹¿¨ºÅ£¨Êı×Ö»ò×ÖÄ¸£©£º"); 
 		scanf("%s", stu.id);
 		clear_stdin();  // Çå¿Õ»º³åÇø
 		if (strcmp(stu.id, "#") == 0) 
 		{ // ÊäÈë#·µ»Ø²Ëµ¥½çÃæ
 			break;
 		}
+
+		// ¼ì²é·¹¿¨ºÅÓĞĞ§ĞÔ£¨Ö»ÔÊĞíÊı×ÖºÍ×ÖÄ¸£©
+		int valid = 1;
+		int len = strlen(stu.id);
+		if (len == 0 || len >= 20) valid = 0;
+		int i = 0;
+		for (i = 0; i < len; ++i)
+		{
+			if (!((stu.id[i] >= '0' && stu.id[i] <= '9') ||
+				(stu.id[i] >= 'A' && stu.id[i] <= 'Z') ||
+				(stu.id[i] >= 'a' && stu.id[i] <= 'z')))
+			{
+				valid = 0;
+				break;
+			}
+		}
+		if (!valid)
+		{
+			printf("·¹¿¨ºÅ¸ñÊ½´íÎó£¬ÒÑÍË³ö¡£\n");
+			break;
+		}
+
 		// ÅĞ¶Ï·¹¿¨ºÅÊÇ·ñÖØ¸´
 		if (Duplicate(pf, stu.id)) 
 		{
