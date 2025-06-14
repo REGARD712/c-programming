@@ -457,7 +457,16 @@ void Delete()
 	printf("若返回，请输入‘#’；\n若不返回，请输入要注销的饭卡号：");
 	scanf("%s", id_input);
 	clear_stdin();  // 清空缓冲区
-	if (strcmp(id_input, "#") == 0)
+	int choice = 0;
+	printf("您确定要删除该饭卡号吗？\n若确认删除，请输入1；若要取消删除操作，请输入0：");
+	while (scanf("%d", &choice) != 1 || (choice != 1 && choice != 0))
+	{
+		printf("输入无效！请重新输入。\n");
+		clear_stdin();
+		system("pause");
+	}
+	clear_stdin();
+	if (strcmp(id_input, "#") == 0 || choice == 0)
 	{
 		fclose(pf);
 		fclose(temp);
