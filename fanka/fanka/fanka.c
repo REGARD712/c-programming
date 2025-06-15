@@ -237,7 +237,9 @@ void Consume()
 	}
 
 	fclose(pf);
+	pf = NULL;
 	fclose(temp);
+	temp = NULL;
 
 	// 用临时文件替换原文件
 	remove("card.dat");
@@ -323,7 +325,9 @@ void Charge()
 	}
 
 	fclose(pf);
+	pf = NULL;
 	fclose(temp);
+	temp = NULL;
 
 	// 用临时文件替换原文件
 	remove("card.dat");
@@ -495,7 +499,9 @@ void Delete()
 	}
 
 	fclose(pf);
+	pf = NULL;
 	fclose(temp);
+	temp = NULL;
 
 	// 用临时文件替换原文件
 	remove("card.dat");
@@ -571,7 +577,9 @@ void Set()
 	}
 
 	fclose(pf);
+	pf = NULL;
 	fclose(temp);
+	temp = NULL;
 
 	// 用临时文件替换原文件
 	remove("card.dat");
@@ -587,7 +595,7 @@ void Information()
 
 	while (1)
 	{
-		// 清空屏幕并显示创新功能菜单
+		// 清空屏幕并显示信息功能菜单
 		system("cls");
 		printf("\t......................................\n");
 		printf("\t.          信息功能菜单              .\n");
@@ -643,6 +651,7 @@ void Information()
 			}
 
 			fclose(pf);
+			pf = NULL;
 			system("pause");
 			break;
 
@@ -685,6 +694,7 @@ void Information()
 			printf("挂失饭卡数量：%d\n", lost_cards);
 
 			fclose(pf);
+			pf = NULL;
 			system("pause");
 			break;
 		default:
