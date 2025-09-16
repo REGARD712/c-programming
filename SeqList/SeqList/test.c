@@ -13,4 +13,6 @@ int main()
 
 	SLPopBack(&sl);
 	SLPrint(sl);
+
+	printf("%d",SLFind(&sl, 2));
 }

@@ -28,3 +28,10 @@ void SLPopFront(SL* ps);
 
 // 打印
 void SLPrint(SL ps);
+
+// 指定位置插入元素/删除元素
+void SLInsert(SL* ps, int pos, SLDataType x);
+void SLErase(SL* ps, int pos);
+
+// 查找指定元素并返回下标
+int SLFind(SL* ps, SLDataType x);

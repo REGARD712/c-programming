@@ -99,3 +99,58 @@ void SLPopFront(SL* ps)
 	}
 	ps->size--;
 }
+
+// 在指定位置插入元素
+void SLInsert(SL* ps, int pos, SLDataType x)
+{
+	// 判断传入的地址是否为空
+	assert(ps);
+	// 判断顺序表是否为空
+	assert(ps->size);
+	// 检查pos的合法性
+	assert(pos >= 0 && pos <= ps->size);
+	// 检查顺序表是否已满
+	SLCheckCapacity(ps);
+	// 挪动元素
+	for (int i = ps->size; i > pos; i--)
+	{
+		ps->arr[i] = ps->arr[i - 1];
+	}
+	ps->arr[pos] = x;
+	ps->size++;
+}
+
+// 在指定位置删除元素
+void SLErase(SL* ps, int pos)
+{
+	// 判断传入的地址是否为空
+	assert(ps);
+	// 判断顺序表是否为空
+	assert(ps->size);
+	// 检查pos的合法性
+	assert(pos >= 0 && pos < ps->size);
+	// 从前往后挪动元素
+	for (int i = pos; i < ps->size - 1; i++)
+	{
+		ps->arr[i] = ps->arr[i + 1];
+	}
+	ps->size--;
+}
+
+// 查找指定元素并返回下标
+int SLFind(SL* ps, SLDataType x)
+{
+	// 判断传入的地址是否为空
+	assert(ps);
+	// 判断顺序表是否为空
+	assert(ps->size);
+	// 遍历顺序表
+	for (int i = 0; i < ps->size; i++)
+	{
+		if (ps->arr[i] == x)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
