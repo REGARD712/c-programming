@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="AddressBookSystem/AddressBookSystem.vcxproj" Id="da5d4065-7144-41c7-81f3-082f1b18ab6b" />
+</Solution>
