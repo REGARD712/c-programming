@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
 
 #define MAXN 64
 
@@ -35,10 +36,9 @@ typedef struct AddressBook
 } AddressBook;
 
 /* 函数声明 */
-bool enter();      /* 交互式添加联系人 */
+void enter();      /* 交互式添加联系人 */
 void display();    /* 显示所有联系人 */
-Node* search();    /* 按照姓名查找信息 */
-bool delete();     /* 删除信息 */
-bool save();       /* 将信息存盘到指定文件，返回 success */
-bool load();       /* 从指定文件装入信息，返回 success */
-
+void search();    /* 按照姓名查找信息 */
+void delete();     /* 删除信息 */
+void save();       /* 将信息存盘到指定文件，返回 success */
+void load();       /* 从指定文件读取信息，返回 success */
